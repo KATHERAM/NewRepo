@@ -1,0 +1,368 @@
+﻿
+
+@{
+    ViewBag.Title = "amazonPayLogin";
+    Layout = null;
+}
+<style>
+    #center {
+        margin-top: 40px;
+        height:auto;
+    }
+    #confirmHeader {
+        margin-top: 20px !important;
+        font-size: 20px !important;
+        height: 50px !important;
+    }
+    #ConfirmOrder {
+        margin-top: -32px;
+    }
+    #orderHeader {
+        margin-top: 20px !important;
+        font-size: 20px !important;
+        height: 50px !important;
+    }
+    #GetOrder {
+        margin-top: -32px;
+    }
+    #Paymentborder
+    {
+        height:75% !important;
+    }
+    h1 {
+        color: #88B04B;
+        font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+        font-weight: 900;
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #404F5E;
+        font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    i {
+        color: #9ABC66;
+        font-size: 100px;
+        line-height: 200px;
+        margin-left: -15px;
+    }
+
+    .card {
+        height:auto;
+        background: white;
+        /*padding: 45px;*/
+        border-radius: 4px;
+        box-shadow: 0 2px 3px #C8D0D8;
+       /*display: inline-block;*/
+        margin: 0 auto;
+        margin-bottom:20px !important;
+    }
+</style>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
+</head>
+<body>
+   
+        <form id="setpaymentdetails">
+
+            <input type="hidden" id="address_consent_token" value="" />
+            <div class="container">
+
+
+                <div class="jumbotron jumbotroncolor" style="padding-top: 25px;height:550px !important" id="api-content">
+                    <div id="section-content">
+                        <div class="text-center" id="center">
+                            <span id="ConfirmOrder"></span>
+                            <span id="GetOrder"></span>
+
+                            <div id="addressBookWidgetDiv" style="width: 400px; height: 240px; display: inline-block;"></div>
+                            <div id="walletWidgetDiv" style="width: 400px; height: 240px;display: inline-block;"></div>
+
+                            <div style="clear: both;"></div>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <button type="button" id="Placeorder" value="Placeorder" class="btn btn-success" onclick="PlaceOrder()">Placeorder</button>
+                                    @*<button id="Placeorder" value="Placeorder" onclick="PlaceOrder()"></button>*@
+                                </div>
+                            </div>
+
+
+                            <script src="~/Scripts/jquery-3.4.1.js"></script>
+                            <script type='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'></script>
+
+                            <script type="text/javascript">
+                                var oro = "";
+                                var access_token = "";
+                                var shippingAddress = "";
+                                var today = new Date();
+                                var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+                        function PlaceOrder() {
+                            $.ajax({
+                                type: "POST",
+                                url: "ConfirmOrder",
+                                contentType: "application/json",
+                                data: null,
+                                dataType: "json",
+                                cache: false,
+                                success: function (data) {
+                                 
+                                    $("#AddressAndWallet").attr("hidden");
+                                    $("#addressBookWidgetDiv").empty();
+                                    $("#walletWidgetDiv").empty();
+                                    $("#Placeorder").addClass("hidden");
+                                    $("#GetOrder").addClass("hidden");
+                                   
+                                    var form = $('<div id="ConfirmOrder">'+
+                                        '<div class= "card">'+
+                                        '<div class="payment border-top mt-3 mb-3 border-bottom table-responsive" id="Paymentborder">' +
+
+                                        '<div class="invoice p-5">'+
+                                        '<h5 id="confirmHeader">Your order Confirmed</h5> <span class="font-weight-bold d-block mt-4">Hello, vishnu</span> <span>You order has been confirmed.</span>'+
+                                        '</div>'+
+                                        '<div class="product border-bottom table-responsive">' +
+                                        '<table class= "table table-borderless">' +
+                                        '<thead>' +
+                                        '<th><div class="py-2"> <span class="d-block text-muted">Order Date</span></th>' +
+                                        '<th><div class="py-2"> <span class="d-block text-muted">Order No</span>' +
+                                        '<th><div class="py-2"> <span class="d-block text-muted">Payment</span></th>' +
+                                        '<th><div class="py-2"> <span class="d-block text-muted">Shiping Address</span>' +
+                                        '</thead>'+
+                                        '<tbody>' +
+                                        '<tr>' +
+                                        '<td> <span>' + date + '</span> </div></td>' +
+                                        '<td> <span>' + oro + '</span> </div></td>' +
+                                        '<td> <span>' + 10 + '</span> </div></td>' +
+                                        '<td><span>' + shippingAddress.StateOrRegion + ' ' + shippingAddress.City + ' ' + shippingAddress.CountryCode + ' ' + shippingAddress.PostalCode + '</span> </div></td>' +
+                                        '</tr>' +
+                                        '</tbody>' +
+                                        '</table>' +
+                                        '</div>' +
+                                        '</div>'+
+                                        '</div>'+
+
+                                    '</div>'+
+
+                                '</div>');
+
+                                    $('#ConfirmOrder').append(form);
+
+                                    //form.submit();
+
+                                    $("#AddressAndWallet").removeAttr("hidden");
+
+                                    ////$('#setpaymentdetails').submit();
+                                    //$('#setpaymentdetails').removeAttr("hidden")
+                                    //form.submit();
+
+                                },
+                                error: function (data) {
+                                    debugger;
+                                    $("#AddressAndWallet").attr("hidden");
+                                    $("#addressBookWidgetDiv").empty();
+                                    $("#walletWidgetDiv").empty();
+                                    $("#Placeorder").addClass("hidden");
+
+                                    var form = $('<div id="ConfirmOrder">' +
+                                        '<div class= "card">' +
+                                        '<div class="payment border-top mt-3 mb-3 border-bottom table-responsive" id="Paymentborder">' +
+
+                                        '<div class="invoice p-5">' +
+                                        '<h5 id="confirmHeader">Your order cancelled</h5> <span class="font-weight-bold d-block mt-4">Hello, vishnu</span> <span>You order has been confirmed.</span>' +
+                                        '</div>' +
+                                        '<div class="product border-bottom table-responsive">' +
+                                        '<table class= "table table-borderless">' +
+                                        '<thead>' +
+                                        '<th><div class="py-2"> <span class="d-block text-muted">Order Date</span></th>' +
+                                        '<th><div class="py-2"> <span class="d-block text-muted">Order No</span>' +
+                                        '<th><div class="py-2"> <span class="d-block text-muted">Payment</span></th>' +
+                                        '<th><div class="py-2"> <span class="d-block text-muted">Shiping Address</span>' +
+                                        '</thead>' +
+                                        '<tbody>' +
+                                        '<tr>' +
+                                        '<td> <span>' + date + '</span> </div></td>' +
+                                        '<td> <span>' + oro + '</span> </div></td>' +
+                                        '<td> <span>' + 10 + '</span> </div></td>' +
+                                        '<td><span>' + shippingAddress.StateOrRegion + ' ' + shippingAddress.City + ' ' + shippingAddress.CountryCode + ' ' + shippingAddress.PostalCode + '</span> </div></td>' +
+                                        '</tr>' +
+                                        '</tbody>' +
+                                        '</table>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>' +
+
+                                        '</div>' +
+
+                                        '</div>');
+
+                                    $('#ConfirmOrder').append(form);
+                                    $("#AddressAndWallet").removeAttr("hidden");
+
+                                }
+                            });
+                        }
+
+                        
+                        new OffAmazonPayments.Widgets.AddressBook({
+                            sellerId:'@System.Configuration.ConfigurationManager.AppSettings["MerchantId"].ToString()',
+                            onOrderReferenceCreate: function (orderReference) {
+                                $("#Placeorder").removeClass("hidden");
+                                $("#GetOrder").removeClass("hidden");
+                          
+                                /* make a call to the back-end that will set order reference details
+                                 * and get order reference details. This will set the order total
+                                 * to 19.95 and return order reference details.
+                                 *
+                                 * Get the AddressConsentToken to be sent to the API call
+                                 */
+                                var referid = orderReference.getAmazonOrderReferenceId()
+
+
+                                //$("#amazon_order_reference_id").html(orderReference.getAmazonOrderReferenceId());
+                                oro = orderReference.getAmazonOrderReferenceId();
+                            },
+                            onAddressSelect: function (orderReference) {
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "GetSetOrderReference",
+                                    contentType: "application/json",
+                                    data: JSON.stringify({
+                                        amazonOrderReferenceId: oro,
+                                        amount: "10",
+                                        addressConsentToken: access_token
+                                    }),
+                                    dataType: "json",
+                                    cache: false,
+                                    success: function (data) {
+                                       
+                                        
+                                        var result = JSON.stringify(data);
+
+                                        $.each(JSON.parse(result), function (key, value) {
+                                        
+                                            $.each(JSON.parse(value), function (key, value) {
+                                               
+                                                 shippingAddress = value.SetOrderReferenceDetailsResult.OrderReferenceDetails.Destination.PhysicalDestination;
+
+
+                                            })
+
+                                        })
+                                        $("#GetOrder").empty();
+
+                                        if (shippingAddress != null) {
+
+                                            var form = $('<div id="GetOrder">' +
+                                                '<div class= "card">' +
+                                                '<div class="payment border-top mt-3 mb-3 border-bottom table-responsive">' +
+
+                                                '<div class="invoice p-5">' +
+                                                '<h5 id="orderHeader">Your order </h5> <span class="font-weight-bold d-block mt-4">Hello, vishnu</span> <span>You order has been Recevied.</span>' +
+                                                '</div>' +
+                                                '<div class="product border-bottom table-responsive">' +
+                                                '<table class= "table table-borderless">' +
+                                                '<thead>' +
+                                                '<th><div class="py-2"> <span class="d-block text-muted">Order Date</span></th>' +
+                                                '<th><div class="py-2"> <span class="d-block text-muted">Order No</span>' +
+                                                '<th><div class="py-2"> <span class="d-block text-muted">Payment</span></th>' +
+                                                '<th><div class="py-2"> <span class="d-block text-muted">Shiping Address</span>' +
+                                                '</thead>' +
+                                                '<tbody>' +
+                                                '<tr>' +
+                                                '<td> <span>' + date + '</span> </div></td>' +
+                                                '<td> <span>' + oro + '</span> </div></td>' +
+                                                '<td> <span>' + 10 + '</span> </div></td>' +
+                                                '<td><span>' + shippingAddress.StateOrRegion + ' ' + shippingAddress.City + ' ' + shippingAddress.CountryCode + ' ' + shippingAddress.PostalCode + '</span> </div></td>' +
+                                                '</tr>' +
+                                                '</tbody>' +
+                                                '</table>' +
+                                                '</div>' +
+                                                '</div>' +
+                                                '</div>' +
+
+                                                '</div>' +
+
+                                                '</div>')
+                                            $('#GetOrder').append(form);
+                                        }
+                                        else {
+
+                                        }
+                                      
+                                    }
+                                });
+                            },
+                            design: {
+                                designMode: 'responsive'
+                            },
+                            onError: function (error) {
+
+                                var form = $('<div id="GetOrder">' +
+                                    '<div class= "card">' +
+                                    '<div class="payment border-top mt-3 mb-3 border-bottom table-responsive">' +
+
+                                    '<div class="invoice p-5">' +
+                                    '<h5 id="orderHeader">Your order </h5> <span class="font-weight-bold d-block mt-4">Hello, vishnu</span> <span>You order has been Recevied.</span>' +
+                                    '</div>' +
+                                    '<div class="product border-bottom table-responsive">' +
+                                    '<table class= "table table-borderless">' +
+                                    '<thead>' +
+                                    '<th><div class="py-2"> <span class="d-block text-muted">Order Date</span></th>' +
+                                    '<th><div class="py-2"> <span class="d-block text-muted">Order No</span>' +
+                                    '<th><div class="py-2"> <span class="d-block text-muted">Payment</span></th>' +
+                                    '<th><div class="py-2"> <span class="d-block text-muted">Shiping Address</span>' +
+                                    '</thead>' +
+                                    '<tbody>' +
+                                    '<tr>' +
+                                    '<td> <span>' + date + '</span> </div></td>' +
+                                    '<td> <span>' + oro + '</span> </div></td>' +
+                                    '<td> <span>' + 10 + '</span> </div></td>' +
+                                    '<td><span>' + shippingAddress.StateOrRegion + ' ' + shippingAddress.City + ' ' + shippingAddress.CountryCode + ' ' + shippingAddress.PostalCode + '</span> </div></td>' +
+                                    '</tr>' +
+                                    '</tbody>' +
+                                    '</table>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+
+                                    '</div>' +
+
+                                    '</div>')
+                                $('#GetOrder').append(form);
+                            }
+                        }).bind("addressBookWidgetDiv");
+
+                        new OffAmazonPayments.Widgets.Wallet({
+                            sellerId: '@System.Configuration.ConfigurationManager.AppSettings["MerchantId"].ToString()',
+                            onPaymentSelect: function (orderReference) {
+                              
+                            },
+                            design: {
+                                designMode: 'responsive'
+                            },
+                            onError: function (error) {
+
+                                // your error handling code
+                            }
+                        }).bind("walletWidgetDiv");
+                            </script>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+</body>
+    </html>

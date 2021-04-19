@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "amazonPayLogin";
+}
+<head>
+
+</head>
+<div id="AmazonPayButton" style="text-align:center;margin-top:50px;"></div>
+@*<button type="button" name="button" id="Logout" style="text-align:center">Logout</button>*@
+<iframe id="AddressAndWallet" name="AddressAndWallet" style="width:100%;height:750px;padding-top:20px" src="" frameBorder="0" hidden="hidden"></iframe>
+   
+
+<script async='async' type='text/javascript'
+        src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'>
+</script>
+
+<script>
+
+    window.onAmazonLoginReady = function () {
+
+        amazon.Login.setClientId("@System.Configuration.ConfigurationManager.AppSettings["ClientId"].ToString()");
+
+    };
+    window.onAmazonPaymentsReady = function () {
+        showButton();
+    };
+    function showButton() {
+        var authRequest;
+        OffAmazonPayments.Button("AmazonPayButton","@System.Configuration.ConfigurationManager.AppSettings["MerchantId"].ToString()", {
+            type: "@System.Configuration.ConfigurationManager.AppSettings["Type"].ToString()",
+            color: "@System.Configuration.ConfigurationManager.AppSettings["color"].ToString()",
+            size: "@System.Configuration.ConfigurationManager.AppSettings["size"].ToString()",
+
+            authorization: function () {
+
+                loginOptions = { scope:"@System.Configuration.ConfigurationManager.AppSettings["scope"].ToString()", popup: true };
+                authRequest = amazon.Login.authorize(loginOptions, function (response) {
+                   
+                    if (response.error ) {
+        
+                    }
+                    else {
+                        debugger;
+                        var form = $('<form action="/SignIn/AddressAndWallet" method="post" target="AddressAndWallet"></form>');
+
+                        $('body').append(form);
+
+                        form.submit();
+
+                        $("#AddressAndWallet").removeAttr("hidden");
+                      
+                    }
+
+                });
+            },
+            onError: function (error) {
+
+
+            }
+        });
+    }
+    //document.getElementById('Logout').onclick = function () {
+    //    amazon.Login.logout();
+    //};
+</script>
